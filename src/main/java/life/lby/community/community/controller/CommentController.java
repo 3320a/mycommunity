@@ -39,10 +39,8 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setGmtModified(System.currentTimeMillis());
         comment.setCommentator(user.getId());
-        comment.setLikeCount(0L);
+        comment.setLikeCount(0);
         commentService.insert(comment);
-        Map<Object,Object> map = new HashMap<>();
-        map.put("message","成功");
-        return map;
+        return ResultDTO.okOf();
     }
 }
