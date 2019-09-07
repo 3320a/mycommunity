@@ -2,6 +2,8 @@ package life.lby.community.community.service;
 
 import life.lby.community.community.dto.PageDTO;
 import life.lby.community.community.dto.QuestionDTO;
+import life.lby.community.community.exception.CustomizeErrorCode;
+import life.lby.community.community.exception.CustomizeException;
 import life.lby.community.community.mapper.QuestionMapper;
 import life.lby.community.community.mapper.UserMapper;
 import life.lby.community.community.model.Question;
@@ -98,6 +100,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.getById(id);
+        if(question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user = userMapper.findById(question.getCreator());
