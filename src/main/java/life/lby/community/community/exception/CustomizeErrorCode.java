@@ -1,16 +1,29 @@
 package life.lby.community.community.exception;
 
 public enum CustomizeErrorCode implements ICustomizeErrorCode {
-    QUESTION_NOT_FOUND("这个话题已经不存在了");
+    QUESTION_NOT_FOUND(2001 ,"这个话题已经不存在了"),
+    TARGET_PARAM_NOT_FOUND(2002 ,"未选择话题"),
+    NO_LOGIN(2003 ,"未登录"),
+    SYSTEM_ERROR(2004 ,"系统错误"),
+    TYPE_PARAM_WRONG(2005 ,"回复类型错误或不存在"),
+    COMMENT_NOT_FOUND(2006 ,"这个回复已经不存在了"),
+    ;
 
     @Override
     public String getMessage() {
         return message;
     }
 
-    private String message;
+    @Override
+    public Integer getCode() {
+        return code;
+    }
 
-    CustomizeErrorCode(String message) {
+    private String message;
+    private Integer code;
+
+    CustomizeErrorCode(Integer code, String message) {
         this.message = message;
+        this.code = code;
     }
 }

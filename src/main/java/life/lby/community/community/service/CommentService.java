@@ -1,13 +1,22 @@
 package life.lby.community.community.service;
 
+import life.lby.community.community.dto.CommentDTO;
 import life.lby.community.community.enums.CommentTypsEnums;
+import life.lby.community.community.exception.CustomizeErrorCode;
+import life.lby.community.community.exception.CustomizeException;
 import life.lby.community.community.mapper.CommentMapper;
 import life.lby.community.community.mapper.QuestionMapper;
+import life.lby.community.community.mapper.UserMapper;
 import life.lby.community.community.model.Comment;
 import life.lby.community.community.model.Question;
+import life.lby.community.community.model.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CommentService {
@@ -16,33 +25,48 @@ public class CommentService {
     private CommentMapper commentMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Transactional
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0){
-
+            throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
 
         if(comment.getType() == null || !CommentTypsEnums.isExist(comment.getType())){
-
+            throw new CustomizeException(CustomizeErrorCode.TYPE_PARAM_WRONG);
         }
 
         if(comment.getType() == CommentTypsEnums.COMMENT.getType()){
             //回复评论
             Comment dbcomment = commentMapper.getByParentId(comment.getParentId());
             if(dbcomment==null){
-
+                throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
         }else {
             //回复话题
             Question question = questionMapper.getById(comment.getParentId());
             if (question == null){
-
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
             commentMapper.insert(comment);
             question.setCommentCount(question.getCommentCount()+1);
             questionMapper.updateCommentCount(question);
         }
+    }
+
+    public List<CommentDTO> listByQuestionId(Integer id) {
+        List<Comment> comments = commentMapper.getListByParentId(id);
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+        for (Comment comment : comments) {
+            User user = userMapper.findById(comment.getCommentator());
+            CommentDTO commentDTO = new CommentDTO();
+            BeanUtils.copyProperties(comment,commentDTO);
+            commentDTO.setUser(user);
+            commentDTOS.add(commentDTO);
+        }
+        return commentDTOS;
     }
 }
