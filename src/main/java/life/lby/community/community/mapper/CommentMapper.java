@@ -14,6 +14,6 @@ public interface CommentMapper {
     void insert(Comment comment);
     @Select("select * from comment where id = #{parentId}")
     Comment getByParentId(@Param(value = "parentId") Integer parentId);
-    @Select("select * from comment where parent_id = #{id}")
+    @Select("select * from comment where parent_id = #{id} order by gmt_create desc")
     List<Comment> getListByParentId(@Param(value = "id") Integer id);
 }
