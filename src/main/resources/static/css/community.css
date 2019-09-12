@@ -66,3 +66,7 @@ body{
 .menu .icon:hover{
     color: #499ef3;
 }
+
+.question-tag{
+    margin-right: 5px;
+}

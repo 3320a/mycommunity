@@ -8,12 +8,15 @@ import life.lby.community.community.mapper.QuestionMapper;
 import life.lby.community.community.mapper.UserMapper;
 import life.lby.community.community.model.Question;
 import life.lby.community.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -128,5 +131,25 @@ public class QuestionService {
         Question question = questionMapper.getById(id);
         question.setViewCount(question.getViewCount()+1);
         questionMapper.updateViewCount(question);
+    }
+
+
+    public List<QuestionDTO> selectRelated(QuestionDTO questionDTO) {
+        if(StringUtils.isBlank(questionDTO.getTag())){
+            return new ArrayList<>();
+        }
+        String[] tags = StringUtils.split(questionDTO.getTag(), ",");
+        String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
+        List<Question> list = questionMapper.selectByTagRegexp(questionDTO.getId(), regexpTag);
+        List<QuestionDTO> relatedQuestionList = new ArrayList<>();
+
+        for (Question question : list) {
+            User user = userMapper.findById(question.getCreator());
+            QuestionDTO dto = new QuestionDTO();
+            BeanUtils.copyProperties(question,dto);
+            dto.setUser(user);
+            relatedQuestionList.add(dto);
+        }
+        return relatedQuestionList;
     }
 }

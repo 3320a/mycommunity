@@ -32,4 +32,7 @@ public interface QuestionMapper {
     void updateViewCount(Question question);
     @Update("update question set comment_count=#{commentCount} where id=#{id}")
     void updateCommentCount(Question question);
+
+    @Select("select * from question where id != #{id} and tag regexp #{regexpTag}")
+    List<Question> selectByTagRegexp(@Param(value = "id") Integer id,@Param(value = "regexpTag") String regexpTag);
 }
