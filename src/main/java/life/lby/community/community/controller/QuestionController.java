@@ -1,8 +1,8 @@
 package life.lby.community.community.controller;
 
-import life.lby.community.community.dto.CommentCreateDTO;
 import life.lby.community.community.dto.CommentDTO;
 import life.lby.community.community.dto.QuestionDTO;
+import life.lby.community.community.enums.CommentTypsEnums;
 import life.lby.community.community.service.CommentService;
 import life.lby.community.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Integer id,
                            Model model){
         QuestionDTO questionDTO = questionService.getById(id);
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypsEnums.QUESTION);
         questionService.incView(id);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments",comments);
