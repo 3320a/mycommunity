@@ -6,6 +6,7 @@ import life.lby.community.community.dto.ResultDTO;
 import life.lby.community.community.enums.CommentTypsEnums;
 import life.lby.community.community.exception.CustomizeErrorCode;
 import life.lby.community.community.mapper.CommentMapper;
+import life.lby.community.community.mapper.NotificationMapper;
 import life.lby.community.community.model.Comment;
 import life.lby.community.community.model.User;
 import life.lby.community.community.service.CommentService;
@@ -23,6 +24,8 @@ public class CommentController {
     private CommentMapper commentMapper;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
     @ResponseBody
     @RequestMapping(value = "/comment",method = RequestMethod.POST)

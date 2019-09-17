@@ -28,7 +28,7 @@ public class QuestionService {
 
     public PageDTO list(Integer page, Integer size) {
 
-        PageDTO pageDTO = new PageDTO();
+        PageDTO<QuestionDTO> pageDTO = new PageDTO<>();
 
         Integer totalPage;
 
@@ -60,12 +60,12 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        pageDTO.setQuestions(questionDTOList);
+        pageDTO.setData(questionDTOList);
         return pageDTO;
     }
 
     public PageDTO list(Integer userId, Integer page, Integer size) {
-        PageDTO pageDTO = new PageDTO();
+        PageDTO<QuestionDTO> pageDTO = new PageDTO<>();
 
         Integer totalPage;
 
@@ -80,7 +80,7 @@ public class QuestionService {
         if(page<1){
             page = 1;
         }
-        if(page > totalPage){
+        if(totalPage >0 && page > totalPage){
             page = totalPage;
         }
 
@@ -97,7 +97,7 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-        pageDTO.setQuestions(questionDTOList);
+        pageDTO.setData(questionDTOList);
         return pageDTO;
     }
 

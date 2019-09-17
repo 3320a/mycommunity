@@ -1,7 +1,6 @@
 package life.lby.community.community.mapper;
 
 import life.lby.community.community.model.Comment;
-import life.lby.community.community.model.Question;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
